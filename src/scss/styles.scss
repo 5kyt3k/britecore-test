@@ -1,0 +1,96 @@
+//Britecore Test Project: styles
+/********************************/
+
+// import flexboxgrid
+@import 'flexboxgrid';
+
+/*********************
+COLORS
+*********************/
+
+$bc-blue:          #017c91;
+$bc-light-grey:    #eff4f5;
+
+$bc-border:        #a8c2c7;
+
+//Do not change variable names below this line (things will break)
+$primary-color:    $bc-blue;
+$secondary-color:  $bc-light-grey;
+$border-color:     $bc-border;
+//end colors
+
+html,
+body{
+  box-sizing: border-box;
+}
+
+.card-field{
+  border-radius:5px;
+  border: 1px solid $border-color;
+  color: #555;
+  background: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: stretch;
+
+  input{
+    background: #fff;
+    border: 1px solid $border-color;
+    border-radius:3px;
+    padding: 5px;
+  }
+}
+
+.card-field--types{
+  background-color: $secondary-color;
+  padding: 20px;
+
+  .field-types--filter{
+    margin: 0 0 20px 0;
+  }
+
+  .type{
+    border: 1px solid $border-color;
+    padding: 20px;
+    margin: 0 0 20px 0;
+    background-color: #fff;
+    border-radius: 5px;
+  }
+}
+
+.card-field--details{
+  padding: 20px;
+  flex: 1;
+
+  .details-title{
+    width: 100%;
+  }
+
+  #details{
+    display: flex;
+    flex-wrap: wrap;
+
+    form{
+      flex: 1;
+      justify-content: flex-start;
+      padding: 0 5% 0 0;
+
+      label{
+        width: 100%;
+      }
+
+      input{
+        width: 100%;
+        clear: both;
+      }
+    }
+
+    .card-field--groups{
+      background-color: $secondary-color;
+      padding: 20px;
+      border-radius: 5px;
+      border: 1px solid $border-color;
+    }
+  }
+}
