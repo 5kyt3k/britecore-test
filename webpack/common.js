@@ -6,7 +6,7 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 module.exports = () => {
   return {
     entry: {
-      './dist/js/scripts.js': './src/js/scripts.js',
+      './dist/js/bundle.js': './src/main.js',
       './dist/css/styles.css': './src/scss/styles.scss',
     },
     output: {
@@ -14,10 +14,14 @@ module.exports = () => {
       filename: '[name]'
     },
     resolve: {
-      extensions: ['.js']
+      extensions: ['.js', '.vue', '.json']
     },
     module: {
       rules: [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+        },
         {
           test: /\.js?$/,
           exclude: /node_modules/,
@@ -29,13 +33,7 @@ module.exports = () => {
             fallback: 'style-loader',
             use: ['css-loader', 'sass-loader']
           })
-        }
-      ],
-      loaders: [
-        {
-          test: /\.vue$/,
-          loader: 'vue-loader'
-        }
+        },
       ]
     },
     resolve: {

@@ -686,7 +686,16 @@ body {
     padding: 20px;
     margin: 0 0 20px 0;
     background-color: #fff;
-    border-radius: 5px; }
+    border-radius: 5px;
+    cursor: pointer; }
+    .card-field--types .type:hover {
+      background-color: #EEE; }
+  .card-field--types .highlight {
+    background-color: #017c91;
+    color: #fff; }
+    .card-field--types .highlight:hover {
+      background-color: #017c91;
+      color: #fff; }
 
 .card-field--details {
   padding: 20px;
@@ -710,5 +719,17 @@ body {
       padding: 20px;
       border-radius: 5px;
       border: 1px solid #a8c2c7; }
+  .card-field--details #tag-group {
+    padding: 20px 0; }
+    .card-field--details #tag-group li {
+      display: inline-block;
+      list-style: none;
+      border: 1px solid #017c91;
+      padding: 3px;
+      border-radius: 3px;
+      cursor: pointer; }
+      .card-field--details #tag-group li:hover {
+        background-color: #017c91;
+        color: #fff; }
 
 /*# sourceMappingURL=styles.css.map*/
