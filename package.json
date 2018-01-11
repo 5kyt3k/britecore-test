@@ -42,5 +42,8 @@
     "lib": "lib"
   },
   "keywords": [],
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "vue-pattern-input": "^2.0.0"
+  }
 }

@@ -661,6 +661,10 @@ html,
 body {
   box-sizing: border-box; }
 
+input[aria-invalid="true"], textarea[aria-invalid="true"] {
+  border: 1px solid #000;
+  box-shadow: 0 0 4px 0 #000; }
+
 .card-field {
   border-radius: 5px;
   border: 1px solid #a8c2c7;

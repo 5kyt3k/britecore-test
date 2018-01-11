@@ -828,6 +828,55 @@ function applyToTag (styleElement, obj) {
 //
 //
 //
+//
+//
+
+function addEvent(node, type, callback) {
+  if (node.addEventListener) {
+    node.addEventListener(type, function (e) {
+      callback(e, e.target);
+    }, false);
+  } else if (node.attachEvent) {
+    node.attachEvent("on" + type, function (e) {
+      callback(e, e.srcElement);
+    });
+  }
+}
+
+//identify whether a field should be validated
+//ie. true if the field is neither readonly nor disabled,
+//and has either "pattern", "required" or "aria-invalid"
+function shouldBeValidated(field) {
+  return !(field.getAttribute("readonly") || field.readonly) && !(field.getAttribute("disabled") || field.disabled) && (field.getAttribute("pattern") || field.getAttribute("required"));
+}
+
+//field testing and validation function
+function instantValidation(field) {
+  //if the field should be validated
+  if (shouldBeValidated(field)) {
+    //the field is invalid if:
+    //it's required but the value is empty
+    //it has a pattern but the (non-empty) value doesn't pass
+    var invalid = field.getAttribute("required") && !field.value || field.getAttribute("pattern") && field.value && !new RegExp(field.getAttribute("pattern")).test(field.value);
+
+    //add or remove the attribute is indicated by
+    //the invalid flag and the current attribute state
+    if (!invalid && field.getAttribute("aria-invalid")) {
+      field.removeAttribute("aria-invalid");
+    } else if (invalid && !field.getAttribute("aria-invalid")) {
+      field.setAttribute("aria-invalid", "true");
+    }
+  }
+}
+
+var fields = [document.getElementsByTagName("input"), document.getElementsByTagName("textarea")];
+for (var a = fields.length, i = 0; i < a; i++) {
+  for (var b = fields[i].length, j = 0; j < b; j++) {
+    addEvent(fields[i][j], "change", function (e, target) {
+      instantValidation(target);
+    });
+  }
+}
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   data() {
@@ -12307,110 +12356,130 @@ var render = function() {
     _vm._m(0),
     _vm._v(" "),
     _c("div", { attrs: { id: "details" } }, [
-      _c("form", [
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-sm-6" }, [
-            _c("label", { attrs: { for: "display-label" } }, [
-              _vm._v("Display Label")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model.lazy",
-                  value: _vm.form.label,
-                  expression: "form.label",
-                  modifiers: { lazy: true }
-                }
-              ],
-              attrs: { type: "text", id: "display-label" },
-              domProps: { value: _vm.form.label },
-              on: {
-                change: function($event) {
-                  _vm.$set(_vm.form, "label", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-6" }, [
-            _c("label", { attrs: { for: "reference-name" } }, [
-              _vm._v("Reference Name")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              attrs: { type: "text", id: "reference-name" },
-              domProps: { value: _vm.form.label }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-6" }, [
-            _c("label", { attrs: { for: "default-value" } }, [
-              _vm._v("Default Value")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.default,
-                  expression: "form.default"
-                }
-              ],
-              attrs: { type: "text", id: "default-value" },
-              domProps: { value: _vm.form.default },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+      _c(
+        "form",
+        {
+          attrs: { action: "", method: "post", onsubmit: "return validate()" }
+        },
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-sm-6" }, [
+              _c("label", { attrs: { for: "display-label" } }, [
+                _vm._v("Display Label")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model.lazy",
+                    value: _vm.form.label,
+                    expression: "form.label",
+                    modifiers: { lazy: true }
                   }
-                  _vm.$set(_vm.form, "default", $event.target.value)
+                ],
+                attrs: { type: "text", id: "display-label" },
+                domProps: { value: _vm.form.label },
+                on: {
+                  change: function($event) {
+                    _vm.$set(_vm.form, "label", $event.target.value)
+                  }
                 }
-              }
-            }),
-            _vm._v(" "),
-            _c("label", { attrs: { for: "custom-validation" } }, [
-              _vm._v("Custom Validation")
+              })
             ]),
             _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.validation,
-                  expression: "form.validation"
-                }
-              ],
-              attrs: { type: "text", id: "custom-validation" },
-              domProps: { value: _vm.form.validation },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+            _c("div", { staticClass: "col-sm-6" }, [
+              _c("label", { attrs: { for: "reference-name" } }, [
+                _vm._v("Reference Name")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                attrs: { type: "text", id: "reference-name" },
+                domProps: { value: _vm.form.label }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-6" }, [
+              _c("label", { attrs: { for: "default-value" } }, [
+                _vm._v("Default Value")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.default,
+                    expression: "form.default"
                   }
-                  _vm.$set(_vm.form, "validation", $event.target.value)
+                ],
+                attrs: { type: "text", id: "default-value" },
+                domProps: { value: _vm.form.default },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "default", $event.target.value)
+                  }
                 }
-              }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _vm._m(1),
-          _vm._v(" "),
-          _vm._m(2),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-6" }, [
-            _vm._v("\n          Tags\n          "),
-            _c("div", { attrs: { id: "tags" } }, [
-              _vm._v("\n            " + _vm._s(_vm.tag) + "\n          ")
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "email" } }, [_vm._v("E-mail")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.validation,
+                    expression: "form.validation"
+                  }
+                ],
+                attrs: {
+                  name: "email",
+                  id: "email",
+                  value: "",
+                  required: "required",
+                  "aria-required": "true",
+                  pattern:
+                    "^(([-\\w\\d]+)(\\.[-\\w\\d]+)*@([-\\w\\d]+)(\\.[-\\w\\d]+)*(\\.([a-zA-Z]{2,5}|[\\d]{1,3})){1,2})$",
+                  title: "Your email address",
+                  type: "email",
+                  spellcheck: "false",
+                  size: "30"
+                },
+                domProps: { value: _vm.form.validation },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "validation", $event.target.value)
+                  }
+                }
+              })
             ])
-          ])
-        ])
-      ]),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _vm._m(2),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-6" }, [
+              _vm._v("\n          Tags\n          "),
+              _c("div", { attrs: { id: "tags" } }, [
+                _vm._v("\n            " + _vm._s(_vm.tag) + "\n          ")
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            attrs: { id: "submit", type: "submit", value: "Check Form" }
+          })
+        ]
+      ),
       _vm._v(" "),
       _vm._m(3)
     ])
